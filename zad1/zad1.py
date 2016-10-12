@@ -39,17 +39,20 @@ def get_key_words(content):
 
 def count_contractions(text):
     pattern = r'\W[a-zA-Z]{1,3}\.'
-    return len(re.compile(pattern).findall(text))
+    contractions = re.compile(pattern).findall(text)
+    contraction_set = set()
+    for i in contractions:
+        contraction_set.add(i)
+    return len(contraction_set)
 
 
 def count_sentences(text):
-    patterns1 = [r' (\w)+[?!]+', r' (\w)(?=<(.*)>)', r' (\w)\n']
-    pattern = r'(%s|%s|%s)' % tuple(patterns1)
-    ret = len(re.compile(pattern).findall(text))
+    patterns1 = [r'\s(\w)+[?!]+', r'\s(\w)(?=<(.*)>)', '\s(\w)\n']
+    pattern1 = r'(%s|%s|%s)' % tuple(patterns1)
+    pattern2 = r'((.*)|(\W(\w)+@((\w)+\.)+(\w)+\W)|(\W[a-zA-Z]{1,3}))* '
+    pattern2 = r'(.*)'
+    ret = len(re.compile(pattern1).findall(text))
     tmp = re.compile(r'.*\D\.').findall(text)
-    sentences_set = set()
-    for i in tmp:
-        pass
 
 
 def count_mails(text):
@@ -75,14 +78,12 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'''[/\^\*\+<>=,"'\s](-?)' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
+    pattern = r'''[/\^\*\+<>=,"'\s](-?)''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
         float_set.add(i.group())
-    print (float_set)
     return len(float_set)
-
 
 
 def count_dates(content):
