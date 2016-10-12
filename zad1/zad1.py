@@ -38,8 +38,9 @@ def get_key_words(content):
 
 
 def count_contractions(text):
-    pattern = r'\W[a-zA-Z]{1,3}\.'
+    pattern = r'(?<=\s)[a-zA-ZęóąśłżźćńĘÓĄŚŁŻŹĆŃ]{1,3}\.(?=\s)'
     contractions = re.compile(pattern).findall(text)
+    print(contractions)
     contraction_set = set()
     for i in contractions:
         contraction_set.add(i)
@@ -49,7 +50,6 @@ def count_contractions(text):
 def count_sentences(text):
     pattern = r'(.*?)\s[a-zA-ZęóąśłżźćńĘÓĄŚŁŻŹĆŃ]{4,}(?=([\.?!]+|(<(.*)>)?$))'
     ret = re.compile(pattern, re.MULTILINE).findall(text)
-    print(ret)
     return len(ret)
 
 
@@ -154,6 +154,7 @@ def processFile(filepath):
     search_text = get_text(content)
     dates_count = count_dates(search_text)
     sentences_count = count_sentences(search_text)
+    contractions_count = count_contractions(search_text)
     ints_count = count_ints(search_text)
     floats_count = count_floats(search_text)
     mails_count = count_mails(search_text)
@@ -163,7 +164,7 @@ def processFile(filepath):
     print("dzial:", dzial)
     print("slowa kluczowe:", key_words)
     print("liczba zdan:", sentences_count)
-    print("liczba skrotow:")
+    print("liczba skrotow:", contractions_count)
     print("liczba liczb calkowitych z zakresu int:", ints_count)
     print("liczba liczb zmiennoprzecinkowych:", floats_count)
     print("liczba dat:", dates_count)
