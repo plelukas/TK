@@ -77,7 +77,7 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'''(/|\^|\*|\+|-|<|>|=|,|"|'|\s''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
+    pattern = r'''(?<=(/|\^|\*|\+|-|<|>|=|,|"|'|\s))(''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r''')(e(\+|-)?(\d)+)?(/|\^|\*|\+|<|>|=|,|"|'|\s)'''
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
