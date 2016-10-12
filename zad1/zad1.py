@@ -64,8 +64,8 @@ def count_mails(text):
 
 
 def count_ints(text):
-    patterns = [r'((([12][0-9]{,4})', '(3[01][0-1]{,3})', '(3[3-9]{,3})', '(32[0-6][0-9]{,2})', '(32[89][0-9])', '(327[0-5][0-9])', '(327[7-9])', '(3276[0-7])))']
-    pattern = r'''(-32768|[/\^\*\+-<>=,"'\s](0*)(%s|%s|%s|%s|%s|%s|%s|%s)[/\^\*\+-<>=,"'\s])''' % tuple(patterns)
+    patterns = [r'[0-9]{1,4}', r'[0-3][0-2][0-7][0-6][0-7]', r'0', r'-32768']
+    pattern = r'''((?<=/|\^|\*|\+|-|<|>|=|,|"|'|\s)(0*)(%s|%s|%s|%s)(?=/|\^|\*|\+|-|<|>|=|,|"|'|\s))''' % tuple(patterns)
 
     int_r = re.compile(pattern)
     int_set = set()
@@ -78,11 +78,12 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'''[/\^\*\+-<>=,"'\s]''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
+    pattern = r'''(/|\^|\*|\+|-|<|>|=|,|"|'|\s)''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
         float_set.add(i.group())
+    print ("flołty: ", float_set)
     return len(float_set)
 
 
