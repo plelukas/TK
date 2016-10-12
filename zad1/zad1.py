@@ -38,7 +38,7 @@ def get_key_words(content):
 
 
 def count_contractions(text):
-    pattern = r'\W[a-zA-Z]{1,3}\.'
+    pattern = r'(?<=\s)[a-zA-ZęóąśłżźćńĘÓĄŚŁŻŹĆŃ]{1,3}\.(?=\s)'
     contractions = re.compile(pattern).findall(text)
     contraction_set = set()
     for i in contractions:
@@ -49,7 +49,6 @@ def count_contractions(text):
 def count_sentences(text):
     pattern = r'(.*?)\s[a-zA-ZęóąśłżźćńĘÓĄŚŁŻŹĆŃ]{4,}(?=([\.?!]+|(<(.*)>)?$))'
     ret = re.compile(pattern, re.MULTILINE).findall(text)
-    print(ret)
     return len(ret)
 
 
@@ -57,14 +56,13 @@ def count_mails(text):
     mails_r = re.compile(r'(?<=\s)(\w)+@(\w)+(\.(\w)+)+(?=\s)')
     mails_set = set()
     for mail in mails_r.finditer(text):
-        print(mail.group())
         mails_set.add(mail.group())
     return len(mails_set)
 
 
 def count_ints(text):
     patterns = [r'[0-9]{1,4}', r'[0-3][0-2][0-7][0-6][0-7]', r'0', r'-32768']
-    pattern = r'''((?<=/|\^|\*|\+|-|<|>|=|,|"|'|\s)(0*)(%s|%s|%s|%s)(?=/|\^|\*|\+|-|<|>|=|,|"|'|\s))''' % tuple(patterns)
+    pattern = r'''((?<=/|\^|\*|\+|-|<|>|=|,|"|'|\s|\(|\)|\[|\]|\{|\}|\||&)(0*)(%s|%s|%s|%s)(?=/|\^|\*|\+|-|<|>|=|,|"|'|\s|\(|\)|\[|\]|\{|\}|\||&))''' % tuple(patterns)
 
     int_r = re.compile(pattern)
     int_set = set()
@@ -77,12 +75,12 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'''(?<=(/|\^|\*|\+|-|<|>|=|,|"|'|\s))(''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r''')(e(\+|-)?(\d)+)?(/|\^|\*|\+|<|>|=|,|"|'|\s)'''
+    pattern = r'''(?<=(/|\^|\*|\+|-|<|>|=|,|"|'|\s|\(|\)|\[|\]|\{|\}|\||&))(''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r''')(e(\+|-)?(\d)+)?(/|\^|\*|\+|<|>|=|,|"|'|\s)'''
+
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
         float_set.add(i.group())
-    print ("flołty: ", float_set)
     return len(float_set)
 
 
@@ -141,6 +139,7 @@ def get_text(content):
     m = r.search(content)
     return m.group()
 
+
 def processFile(filepath):
     fp = codecs.open(filepath, 'rU', 'iso-8859-2')
 
@@ -154,6 +153,7 @@ def processFile(filepath):
     search_text = get_text(content)
     dates_count = count_dates(search_text)
     sentences_count = count_sentences(search_text)
+    contractions_count = count_contractions(search_text)
     ints_count = count_ints(search_text)
     floats_count = count_floats(search_text)
     mails_count = count_mails(search_text)
@@ -163,7 +163,7 @@ def processFile(filepath):
     print("dzial:", dzial)
     print("slowa kluczowe:", key_words)
     print("liczba zdan:", sentences_count)
-    print("liczba skrotow:")
+    print("liczba skrotow:", contractions_count)
     print("liczba liczb calkowitych z zakresu int:", ints_count)
     print("liczba liczb zmiennoprzecinkowych:", floats_count)
     print("liczba dat:", dates_count)
