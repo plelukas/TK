@@ -47,11 +47,10 @@ def count_contractions(text):
 
 
 def count_sentences(text):
-    patterns1 = [r'(\s(\w)+[?!]+)', r'(\s(\w)(?=<(.*)>))', r'(\s(\w)$)']
-    pattern1 = r'(%s|%s|%s)' % tuple(patterns1)
-    pattern2 = r'(.*)\s[a-zA-Z]{4,}'
-    ret = len(re.compile(pattern1, re.MULTILINE).findall(text))
-    tmp = re.compile(r'.*\D\.').findall(text)
+    pattern = r'(.*?)\s[a-zA-ZęóąśłżźćńĘÓĄŚŁŻŹĆŃ]{4,}(?=([\.?!]+|(<(.*)>)?$))'
+    ret = re.compile(pattern, re.MULTILINE).findall(text)
+    print(ret)
+    return len(ret)
 
 
 def count_mails(text):
@@ -98,7 +97,6 @@ def count_dates(content):
     years = r'([0-9]{4})'
 
     params_list = days_months[:] + [years]
-    print(params_list)
     dates_patterns_with_minus = r'(?<!\d)((%s-%s)|(%s-%s)|(%s-%s))-%s(?!\d)' % tuple(params_list)
     dates_patterns_with_dot = r'(?<!\d)((%s\.%s)|(%s\.%s)|(%s\.%s))\.%s(?!\d)' % tuple(params_list)
     dates_patterns_with_slash = r'(?<!\d)((%s/%s)|(%s/%s)|(%s/%s))/%s(?!\d)' % tuple(params_list)
@@ -112,7 +110,6 @@ def count_dates(content):
         dates_patterns2_with_dot, dates_patterns2_with_minus, dates_patterns2_with_slash,
         dates_patterns_with_dot, dates_patterns_with_minus, dates_patterns_with_slash
     )
-
 
     date_match = r'^[\d]{4}'
     date_r = re.compile(date_match)
@@ -155,7 +152,7 @@ def processFile(filepath):
 
     search_text = get_text(content)
     dates_count = count_dates(search_text)
-    sentence_count = count_sentences(search_text)
+    sentences_count = count_sentences(search_text)
     ints_count = count_ints(search_text)
     floats_count = count_floats(search_text)
     mails_count = count_mails(search_text)
@@ -164,7 +161,7 @@ def processFile(filepath):
     print("autor:", author)
     print("dzial:", dzial)
     print("slowa kluczowe:", key_words)
-    print("liczba zdan:", sentence_count)
+    print("liczba zdan:", sentences_count)
     print("liczba skrotow:")
     print("liczba liczb calkowitych z zakresu int:", ints_count)
     print("liczba liczb zmiennoprzecinkowych:", floats_count)
