@@ -15,6 +15,7 @@ def get_author(content):
     author = r.search(m.group())
     return author.group()
 
+
 def get_dzial(content):
     meta_dzial_pattern = r'<meta (.*)name="dzial"(.*?)>'
     r = re.compile(meta_dzial_pattern, re.I)
@@ -22,6 +23,7 @@ def get_dzial(content):
     r = re.compile(_CONTENT_PATTERN, re.I)
     dzial = r.search(m.group())
     return dzial.group()
+
 
 def get_key_words(content):
     meta_kw_pattern = r'<meta (.*)name="kluczowe_(\d+)"(.*?)>'
@@ -42,6 +44,59 @@ def get_ints(content):
 
 def get_floats(content):
     pass # TODO Pawel
+
+
+def count_contractions(text):
+    pattern = r'\W[a-zA-Z]{1,3}\.'
+    return len(re.compile(pattern).findall(text))
+
+
+def count_sentences(text):
+    patterns1 = [r' (\w)+[?!]+', r' (\w)(?=<(.*)>)', r' (\w)\n']
+    pattern = r'(%s|%s|%s)' % tuple(patterns1)
+    ret = len(re.compile(pattern).findall(text))
+    tmp = re.compile(r'.*\D\.').findall(text)
+    sentences_set = set()
+    for i in tmp:
+
+
+
+def count_mails(text):
+    mails_r = re.compile(r'\W(\w)+@((\w)+\.)+(\w)+\W')
+    mails_set = set()
+    for mail in mails_r.finditer(text):
+        mails_set.add(mail.group())
+    return len(mails_set)
+
+
+def get_text(text):
+    return re.compile(r'<p>(.*?)(?=<meta (.*?)>)', re.I | re.S).search(text)
+
+
+def count_ints(text):
+    patterns = [r'((([12][0-9]{,4})', '(3[01][0-1]{,3})', '(3[3-9]{,3})', '(32[0-6][0-9]{,2})', '(32[89][0-9])', '(327[0-5][0-9])', '(327[7-9])', '(3276[0-7])))']
+    pattern = r'(?<!(\d|\.))(-32768|(-?)(0*)(%s|%s|%s|%s|%s|%s|%s|%s))(?!(\d|\.|e))' % tuple(patterns)
+
+    int_r = re.compile(pattern)
+    int_set = set()
+    for i in int_r.finditer(text):
+        int_set.add(i.group())
+    return len(int_set)
+
+
+def count_floats(text):
+    pattern_left = r'((\d)+\.(\d)*)'
+    pattern_right = r'((\d)*\.(\d)+)'
+    pattern_center = r'((\d)+\.(\d)+)'
+    pattern = r'(-?)' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'((e[+-]?(\d)+)?)'
+    tmp = re.compile(pattern)
+    float_set = set()
+    for i in tmp.finditer(text):
+        float_set.add(i.group())
+    print (float_set)
+    return len(float_set)
+
+
 
 def count_dates(content):
     days_months = [
