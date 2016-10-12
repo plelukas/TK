@@ -66,7 +66,7 @@ def count_mails(text):
 
 def count_ints(text):
     patterns = [r'((([12][0-9]{,4})', '(3[01][0-1]{,3})', '(3[3-9]{,3})', '(32[0-6][0-9]{,2})', '(32[89][0-9])', '(327[0-5][0-9])', '(327[7-9])', '(3276[0-7])))']
-    pattern = r'''(-32768|[/\^\*\+-<>=,"'\s](0*)(%s|%s|%s|%s|%s|%s|%s|%s))''' % tuple(patterns)
+    pattern = r'''(-32768|[/\^\*\+-<>=,"'\s](0*)(%s|%s|%s|%s|%s|%s|%s|%s)[/\^\*\+-<>=,"'\s])''' % tuple(patterns)
 
     int_r = re.compile(pattern)
     int_set = set()
