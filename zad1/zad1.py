@@ -98,13 +98,13 @@ def count_dates(content):
     ]
     years = r'([0-9]{4})'
 
-    params_list = days_months.copy() + [years]
+    params_list = days_months[:] + [years]
     print(params_list)
     dates_patterns_with_minus = r'(?<!\d)((%s-%s)|(%s-%s)|(%s-%s))-%s(?!\d)' % tuple(params_list)
     dates_patterns_with_dot = r'(?<!\d)((%s\.%s)|(%s\.%s)|(%s\.%s))\.%s(?!\d)' % tuple(params_list)
     dates_patterns_with_slash = r'(?<!\d)((%s/%s)|(%s/%s)|(%s/%s))/%s(?!\d)' % tuple(params_list)
 
-    params_list2 = [years] + days_months.copy()
+    params_list2 = [years] + days_months[:]
     dates_patterns2_with_minus = r'%s-((%s-%s)|(%s-%s)|(%s-%s))' % tuple(params_list2)
     dates_patterns2_with_dot = r'%s\.((%s\.%s)|(%s\.%s)|(%s\.%s))' % tuple(params_list2)
     dates_patterns2_with_slash = r'%s/((%s/%s)|(%s/%s)|(%s/%s))' % tuple(params_list2)
