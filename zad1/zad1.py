@@ -36,15 +36,6 @@ def get_key_words(content):
             key_words.append(key_word.group())
     return key_words
 
-def get_emails(content):
-    pass # TODO Pawel
-
-def get_ints(content):
-    pass # TODO Pawel
-
-def get_floats(content):
-    pass # TODO Pawel
-
 
 def count_contractions(text):
     pattern = r'\W[a-zA-Z]{1,3}\.'
@@ -58,7 +49,7 @@ def count_sentences(text):
     tmp = re.compile(r'.*\D\.').findall(text)
     sentences_set = set()
     for i in tmp:
-
+        pass
 
 
 def count_mails(text):
@@ -67,10 +58,6 @@ def count_mails(text):
     for mail in mails_r.finditer(text):
         mails_set.add(mail.group())
     return len(mails_set)
-
-
-def get_text(text):
-    return re.compile(r'<p>(.*?)(?=<meta (.*?)>)', re.I | re.S).search(text)
 
 
 def count_ints(text):
@@ -88,7 +75,7 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'(-?)' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'((e[+-]?(\d)+)?)'
+    pattern = r'''[/\^\*\+<>=,"'\s](-?)' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
@@ -159,6 +146,7 @@ def processFile(filepath):
     fp = codecs.open(filepath, 'rU', 'iso-8859-2')
 
     content = fp.read()
+    fp.close()
 
     author = get_author(content)
     dzial = get_dzial(content)
@@ -166,18 +154,21 @@ def processFile(filepath):
 
     search_text = get_text(content)
     dates_count = count_dates(search_text)
+    sentence_count = count_sentences(search_text)
+    ints_count = count_ints(search_text)
+    floats_count = count_floats(search_text)
+    mails_count = count_mails(search_text)
 
-    fp.close()
     print("nazwa pliku:", filepath)
     print("autor:", author)
     print("dzial:", dzial)
     print("slowa kluczowe:", key_words)
-    print("liczba zdan:")
+    print("liczba zdan:", sentence_count)
     print("liczba skrotow:")
-    print("liczba liczb calkowitych z zakresu int:")
-    print("liczba liczb zmiennoprzecinkowych:")
+    print("liczba liczb calkowitych z zakresu int:", ints_count)
+    print("liczba liczb zmiennoprzecinkowych:", floats_count)
     print("liczba dat:", dates_count)
-    print("liczba adresow email:")
+    print("liczba adresow email:", mails_count)
     print("\n")
 
 
