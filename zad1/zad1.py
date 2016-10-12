@@ -49,8 +49,7 @@ def count_contractions(text):
 def count_sentences(text):
     patterns1 = [r'(\s(\w)+[?!]+)', r'(\s(\w)(?=<(.*)>))', r'(\s(\w)$)']
     pattern1 = r'(%s|%s|%s)' % tuple(patterns1)
-    pattern2 = r'((.*)|(\W(\w)+@((\w)+\.)+(\w)+\W)|(\W[a-zA-Z]{1,3}))* '
-    pattern2 = r'(.*)'
+    pattern2 = r'(.*)\s[a-zA-Z]{4,}'
     ret = len(re.compile(pattern1, re.MULTILINE).findall(text))
     tmp = re.compile(r'.*\D\.').findall(text)
 
