@@ -56,7 +56,7 @@ def count_sentences(text):
 
 
 def count_mails(text):
-    mails_r = re.compile(r'\W(\w)+@((\w)+\.)+(\w)+\W')
+    mails_r = re.compile(r'(\w)+@((\w)+\.)+(\w)+')
     mails_set = set()
     for mail in mails_r.finditer(text):
         mails_set.add(mail.group())
@@ -65,7 +65,7 @@ def count_mails(text):
 
 def count_ints(text):
     patterns = [r'((([12][0-9]{,4})', '(3[01][0-1]{,3})', '(3[3-9]{,3})', '(32[0-6][0-9]{,2})', '(32[89][0-9])', '(327[0-5][0-9])', '(327[7-9])', '(3276[0-7])))']
-    pattern = r'(?<!(\d|\.))(-32768|(-?)(0*)(%s|%s|%s|%s|%s|%s|%s|%s))(?!(\d|\.|e))' % tuple(patterns)
+    pattern = r'''(-32768|[/\^\*\+-<>=,"'\s](0*)(%s|%s|%s|%s|%s|%s|%s|%s))''' % tuple(patterns)
 
     int_r = re.compile(pattern)
     int_set = set()
@@ -78,7 +78,7 @@ def count_floats(text):
     pattern_left = r'((\d)+\.(\d)*)'
     pattern_right = r'((\d)*\.(\d)+)'
     pattern_center = r'((\d)+\.(\d)+)'
-    pattern = r'''[/\^\*\+<>=,"'\s](-?)''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
+    pattern = r'''[/\^\*\+-<>=,"'\s]''' + pattern_left + r'|' + pattern_center + r'|' + pattern_right + r'''((e[+-]?(\d)+)?)[/\^\*\+<>=,"'\s]'''
     tmp = re.compile(pattern)
     float_set = set()
     for i in tmp.finditer(text):
