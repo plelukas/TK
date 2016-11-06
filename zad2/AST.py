@@ -126,14 +126,14 @@ class NamedExpression(Node):
         self.id = id
         self.expressions = expressions
 
-class Functions(Node):
+class Fundefs(Node):
     def __init__(self):
-        self.functions = []
+        self.fundefs = []
 
-    def addFunction(self, function):
-        self.functions.append(function)
+    def addFunction(self, fundef):
+        self.fundefs.append(fundef)
 
-class Function(Node):
+class Fundef(Node):
     def __init__(self, type, id, args, compound_instr):
         self.id = id
         self.type = type
