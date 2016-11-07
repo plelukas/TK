@@ -38,7 +38,7 @@ class Declarations(Node):
     def __init__(self):
         self.declarations = []
 
-    def addDeclarations(self, declaration):
+    def addDeclaration(self, declaration):
         self.declarations.append(declaration)
 
 class Declaration(Node):
@@ -114,15 +114,15 @@ class Expressions(Node):
     def __init__(self):
         self.expressions = []
 
-    def addExpressions(self, expr):
+    def addExpression(self, expr):
         self.expressions.append(expr)
 
-class GroupedExpressions(Node):
+class GroupedExpression(Node):
     def __init__(self, interior):
         self.interior = interior
 
 class NamedExpression(Node):
-    def __init__(self, expressions):
+    def __init__(self, id, expressions):
         self.id = id
         self.expressions = expressions
 
@@ -130,7 +130,7 @@ class Fundefs(Node):
     def __init__(self):
         self.fundefs = []
 
-    def addFunction(self, fundef):
+    def addFundef(self, fundef):
         self.fundefs.append(fundef)
 
 class Fundef(Node):
