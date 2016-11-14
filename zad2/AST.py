@@ -16,23 +16,29 @@ class Const(Node):
     def __init__(self, value):
         self.value = value
 
+
 class Integer(Const):
     pass
+
 
 class Float(Const):
     pass
 
+
 class String(Const):
     pass
 
+
 class Variable(Node):
     pass
+
 
 class Program(Node):
     def __init__(self, declarations, fundefs, instructions):
         self.declarations = declarations
         self.fundefs = fundefs
         self.instructions = instructions
+
 
 class Declarations(Node):
     def __init__(self):
@@ -41,10 +47,12 @@ class Declarations(Node):
     def addDeclaration(self, declaration):
         self.declarations.append(declaration)
 
+
 class Declaration(Node):
     def __init__(self, type, inits):
         self.type = type
         self.inits = inits
+
 
 class Inits(Node):
     def __init__(self):
@@ -65,19 +73,23 @@ class Instructions(Node):
     def addInstruction(self, instruction):
         self.instructions.append(instruction)
 
+
 class PrintInstruction(Node):
     def __init__(self, expressions):
         self.expressions = expressions
+
 
 class LabeledInstruction(Node):
     def __init__(self, id, instruction):
         self.id = id
         self.instruction = instruction
 
+
 class AssignmentInstruction(Node):
     def __init__(self, id, expression):
         self.id = id
         self.expression = expression
+
 
 class ChoiceInstruction(Node):
     def __init__(self, condition, instruction, instruction2=None):
@@ -85,19 +97,23 @@ class ChoiceInstruction(Node):
         self.instruction = instruction
         self.instruction2 = instruction2
 
+
 class WhileInstruction(Node):
     def __init__(self, condition, instruction):
         self.condition = condition
         self.instruction = instruction
+
 
 class RepeatInstruction(Node):
     def __init__(self, instructions, condition):
         self.instructions = instructions
         self.condition = condition
 
+
 class ReturnInstruction(Node):
     def __init__(self, expression):
         self.expression = expression
+
 
 class ContinueInstruction(Node):
     pass
