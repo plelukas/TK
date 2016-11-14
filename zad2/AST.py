@@ -49,8 +49,8 @@ class Declarations(Node):
 
 
 class Declaration(Node):
-    def __init__(self, type, inits):
-        self.type = type
+    def __init__(self, typ, inits):
+        self.typ = typ
         self.inits = inits
 
 

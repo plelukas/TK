@@ -12,20 +12,20 @@ def addToClass(cls):
 
 class TreePrinter:
 
-    '''@addToClass(AST.Node)
-    def printTree(self):
-        raise Exception("printTree not defined in class " + self.__class__.__name__)
-        '''
-
     @addToClass(AST.Node)
     def printTree(self):
-        return ""
+        raise Exception("printTree not defined in class " + self.__class__.__name__)
+
+
+    '''@addToClass(AST.Node)
+    def printTree(self, level=0):
+        return "|" * level'''
 
 
     @addToClass(AST.BinExpr)
     def printTree(self, level=0):
         ret = ""
-        ret += (self.op.printTree(level+1) if isinstance(self.op, AST.Node) else "|" * level + str(self.op)) + "\n"
+        ret += "|" * level + str(self.op) + '\n'
         ret += (self.left.printTree(level+1) if isinstance(self.left, AST.Node) else "|" * level + str(self.left)) + "\n"
         ret += (self.right.printTree(level+1) if isinstance(self.right, AST.Node) else "|" * level + str(self.right)) + "\n"
         return ret
@@ -33,157 +33,169 @@ class TreePrinter:
     @addToClass(AST.Const)
     def printTree(self, level=0):
         ret = ""
-        ret += (self.value.printTree(level+1) if isinstance(self.value, AST.Node) else "|" * level + str(self.value)) + "\n"
+        ret += "|" * level + str(self.value) + "\n"
         return ret
 
     @addToClass(AST.Program)
     def printTree(self, level=0):
         ret = ""
+        ret += (self.declarations.printTree(level) if self.declarations is not None else "")
+        ret += (self.fundefs.printTree(level) if self.fundefs is not None else "")
+        ret += (self.instructions.printTree(level+1) if self.instructions is not None else "")
+        return ret
+
+    @addToClass(AST.Declarations)
+    def printTree(self, level=0):
+        ret = "|" * level + "DECLARATIONS" + '\n'
         for i in self.declarations:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
-        for i in self.fundefs:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
-        for i in self.instructions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+            ret += i.printTree(level+1)
+        return ret
+
+    @addToClass(AST.Declaration)
+    def printTree(self, level=0):
+        ret = ""
+        ret += self.inits.printTree(level)
         return ret
 
     @addToClass(AST.Inits)
     def printTree(self, level=0):
         ret = ""
-        for i in range(0, level):
-            ret += '|'
-        ret += self.inits.printTree(level+1) + '\n'
+        for i in self.inits:
+            ret += i.printTree(level)
         return ret
 
     @addToClass(AST.Init)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        ret += (self.expression.printTree(level+1) if isinstance(self.expression, AST.Node) else "|" * level + str(self.expression))
+        ret = "|" * level + "=" + "\n"
+        ret += "|" * (level+1) + str(self.id) +"\n"
+        #ret += (self.id.printTree(level) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
+        ret += self.expression.printTree(level+1)
         return ret
 
     @addToClass(AST.Instructions)
     def printTree(self, level=0):
         ret = ""
         for i in self.instructions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + '\n'
+            ret += i.printTree(level)
         return ret
 
     @addToClass(AST.PrintInstruction)
     def printTree(self, level=0):
         ret = ""
-        for i in self.expressions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        #for i in self.expressions:
+        #    ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        ret += "|" * level + "PRINT" + "\n" + self.expressions.printTree(level+1)
         return ret
 
     @addToClass(AST.LabeledInstruction)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        ret += (self.instruction.printTree(level+1) if isinstance(self.instruction, AST.Node) else "|" * level + str(self.instruction)) + "\n"
+        ret = "|" * level + "LABEL" + "\n"
+        ret += "|" * (level+1) + str(self.id) + "\n"
+        ret += self.instruction.printTree(level+1)
         return ret
 
     @addToClass(AST.AssignmentInstruction)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        ret += (self.expression.printTree(level+1) if isinstance(self.expression, AST.Node) else "|" * level + str(self.expression)) + "\n"
+        ret = "|" * level + "=" + "\n"
+        ret += "|" * (level+1) + str(self.id) + "\n"
+        ret += self.expression.printTree(level+1)
         return ret
 
     @addToClass(AST.ChoiceInstruction)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.condition.printTree(level+1) if isinstance(self.condition, AST.Node) else "|" * level + str(self.condition)) + "\n"
-        ret += (self.instruction.printTree(level+1) if isinstance(self.instruction, AST.Node) else "|" * level + str(self.instruction)) + "\n"
-        ret += (self.instruction2.printTree(level+1) if isinstance(self.instruction2, AST.Node) else "|" * level + str(self.instruction2)) + '\n'
+        ret = "|" * level + "IF" + "\n"
+        ret += self.condition.printTree(level+1)
+        ret += self.instruction.printTree(level+1)
+        ret += self.instruction2.printTree(level+1)
         return ret
 
     @addToClass(AST.WhileInstruction)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.condition.printTree(level+1) if isinstance(self.condition, AST.Node) else "|" * level + str(self.condition)) + "\n"
-        ret += (self.instruction.printTree(level+1) if isinstance(self.instruction, AST.Node) else "|" * level + str(self.instruction)) + "\n"
+        ret = "|" * level + "WHILE" + "\n"
+        ret += self.condition.printTree(level+1)
+        ret += self.instruction.printTree(level+1)
         return ret
 
     @addToClass(AST.RepeatInstruction)
     def printTree(self, level=0):
-        ret = ""
-        for i in self.instructions:
-            ret += i.printTree(level+1)
-        ret += (self.condition.printTree(level+1) if isinstance(self.condition, AST.Node) else "|" * level + str(self.condition)) + "\n"
+        ret = "|" * level + "REPEAT" + "\n"
+        ret += self.instructions.printTree(level+1)
+        ret += "|" * level + "UNTIL" + "\n"
+        ret += self.condition.printTree(level+1)
         return ret
 
     @addToClass(AST.ReturnInstruction)
     def printTree(self, level=0):
-        ret = ""
-        ret += "|" * level + self.expression.printTree(level+1) + "\n"
+        ret = "|" * level + "RETURN" + "\n"
+        ret += self.expression.printTree(level+1)
         return ret
+
+    @addToClass(AST.ContinueInstruction)
+    def printTree(self, level=0):
+        return "|" * level + "CONTINUE"
+
+    @addToClass(AST.BreakInstruction)
+    def printTree(self, level=0):
+        return "|" * level + "BREAK"
 
     @addToClass(AST.CompoundInstuction)
     def printTree(self, level=0):
         ret = ""
-        for i in self.declarations:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
-        for i in self.instructions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        if self.declarations is not None:
+            ret += self.declarations.printTree(level+1)
+        if self.instructions is not None:
+            ret += self.instructions.printTree(level+1)
         return ret
 
     @addToClass(AST.Expressions)
     def printTree(self, level=0):
         ret = ""
-        for i in self.expressions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        if self.expressions is not None:
+            for i in self.expressions:
+                ret += i.printTree(level+1)
         return ret
 
     @addToClass(AST.GroupedExpression)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.interior.printTree(level+1) if isinstance(self.interior, AST.Node) else "|" * level + str(self.interior)) + "\n"
+        ret = self.interior.printTree(level)
         return ret
 
     @addToClass(AST.NamedExpression)
     def printTree(self, level=0):
         ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        for i in self.expressions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
-        return ret
-
-    @addToClass(AST.NamedExpression)
-    def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        for i in self.expressions:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        ret += "|" * level + str(self.id) + "\n"
+        if self.expressions is not None:
+            ret += "|" * level + "\n" + self.expressions.printTree(level+1)
         return ret
 
     @addToClass(AST.Fundefs)
     def printTree(self, level=0):
         ret = ""
-        for i in self.fundefs:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        if self.fundefs is not None:
+            for i in self.fundefs:
+                ret += i.printTree(level+1)
         return ret
 
     @addToClass(AST.Fundef)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        ret += (self.type.printTree(level+1) if isinstance(self.type, AST.Node) else "|" * level + str(self.type)) + "\n"
-        for i in self.args:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
-        ret += (self.compound_instr.printTree(level+1) if isinstance(self.compound_instr, AST.Node) else "|" * level + str(self.compound_instr)) + "\n"
+        ret = "|" * level + "FUNDEF" + "\n"
+        ret += "|" * (level+1) + str(self.id) + "\n"
+        ret += "|" * (level+1) + str(self.type) + "\n"
+        ret += self.args.printTree(level+1)
+        ret += self.compound_instr.printTree(level)
         return ret
 
     @addToClass(AST.Arguments)
     def printTree(self, level=0):
         ret = ""
-        for i in self.args:
-            ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
+        if self.args is not None:
+            for i in self.args:
+                ret += i.printTree(level)
         return ret
 
-    @addToClass(AST.Fundef)
+    @addToClass(AST.Argument)
     def printTree(self, level=0):
-        ret = ""
-        ret += (self.id.printTree(level+1) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
-        ret += (self.type.printTree(level+1) if isinstance(self.type, AST.Node) else "|" * level + str(self.type)) + "\n"
+        ret = "|" * level + "ARGUMENT" + "\n"
+        ret += "|" * (level+1) + str(self.type) + "\n"
+        ret += "|" * (level+1) + str(self.id) + "\n"
         return ret
