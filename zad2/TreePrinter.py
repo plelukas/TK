@@ -26,8 +26,8 @@ class TreePrinter:
     def printTree(self, level=0):
         ret = ""
         ret += "|" * level + str(self.op) + '\n'
-        ret += (self.left.printTree(level+1) if isinstance(self.left, AST.Node) else "|" * level + str(self.left)) + "\n"
-        ret += (self.right.printTree(level+1) if isinstance(self.right, AST.Node) else "|" * level + str(self.right)) + "\n"
+        ret += (self.left.printTree(level+1) if isinstance(self.left, AST.Node) else "|" * level + str(self.left))
+        ret += (self.right.printTree(level+1) if isinstance(self.right, AST.Node) else "|" * level + str(self.right))
         return ret
 
     @addToClass(AST.Const)
@@ -68,7 +68,6 @@ class TreePrinter:
     def printTree(self, level=0):
         ret = "|" * level + "=" + "\n"
         ret += "|" * (level+1) + str(self.id) +"\n"
-        #ret += (self.id.printTree(level) if isinstance(self.id, AST.Node) else "|" * level + str(self.id)) + "\n"
         ret += self.expression.printTree(level+1)
         return ret
 
@@ -82,8 +81,6 @@ class TreePrinter:
     @addToClass(AST.PrintInstruction)
     def printTree(self, level=0):
         ret = ""
-        #for i in self.expressions:
-        #    ret += (i.printTree(level+1) if isinstance(i, AST.Node) else "|" * level + str(i)) + "\n"
         ret += "|" * level + "PRINT" + "\n" + self.expressions.printTree(level+1)
         return ret
 
@@ -106,7 +103,8 @@ class TreePrinter:
         ret = "|" * level + "IF" + "\n"
         ret += self.condition.printTree(level+1)
         ret += self.instruction.printTree(level+1)
-        ret += self.instruction2.printTree(level+1)
+        if self.instruction2:
+            ret += "|" * level + "\n" + self.instruction2.printTree(level+1)
         return ret
 
     @addToClass(AST.WhileInstruction)
@@ -165,7 +163,7 @@ class TreePrinter:
         ret = ""
         ret += "|" * level + str(self.id) + "\n"
         if self.expressions is not None:
-            ret += "|" * level + "\n" + self.expressions.printTree(level+1)
+            ret += self.expressions.printTree(level+1)
         return ret
 
     @addToClass(AST.Fundefs)
@@ -178,7 +176,7 @@ class TreePrinter:
 
     @addToClass(AST.Fundef)
     def printTree(self, level=0):
-        ret = "|" * level + "FUNDEF" + "\n"
+        ret = "FUNDEF" + "\n"
         ret += "|" * (level+1) + str(self.id) + "\n"
         ret += "|" * (level+1) + str(self.type) + "\n"
         ret += self.args.printTree(level+1)
@@ -195,7 +193,5 @@ class TreePrinter:
 
     @addToClass(AST.Argument)
     def printTree(self, level=0):
-        ret = "|" * level + "ARGUMENT" + "\n"
-        ret += "|" * (level+1) + str(self.type) + "\n"
-        ret += "|" * (level+1) + str(self.id) + "\n"
+        ret = "|" * level + "ARGUMENT" + " " + str(self.id) + "\n"
         return ret
