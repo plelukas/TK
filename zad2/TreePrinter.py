@@ -171,7 +171,7 @@ class TreePrinter:
         ret = ""
         if self.fundefs is not None:
             for i in self.fundefs:
-                ret += i.printTree(level+1)
+                ret += i.printTree(level)
         return ret
 
     @addToClass(AST.Fundef)
