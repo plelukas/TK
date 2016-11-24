@@ -10,20 +10,17 @@ class Node(object):
 
 
 class BinExpr(Node):
-    def __init__(self, op, left, right, token):
-        self.token = token
+    def __init__(self, op, left, right, line):
+        self.line = line
         self.op = op
         self.left = left
         self.right = right
 
-        # if you want to use somewhere generic_visit method instead of visit_XXX in visitor
-        # definition of children field is required in each class from AST
-        self.children = (left, right)
-
 
 class Const(Node):
-    def __init__(self, value):
+    def __init__(self, value, line):
         self.value = value
+        self.line = line
 
 
 class Integer(Const):
@@ -39,7 +36,9 @@ class String(Const):
 
 
 class Variable(Node):
-    pass
+    def __init__(self, name, line):
+        self.name = name
+        self.line = line
 
 
 class Program(Node):
@@ -58,8 +57,8 @@ class Declarations(Node):
 
 
 class Declaration(Node):
-    def __init__(self, typ, inits):
-        self.typ = typ
+    def __init__(self, type, inits):
+        self.type = type
         self.inits = inits
 
 
@@ -71,9 +70,10 @@ class Inits(Node):
         self.inits.append(init)
 
 class Init(Node):
-    def __init__(self, id, expression):
+    def __init__(self, id, expression, line):
         self.id = id
         self.expression = expression
+        self.line = line
 
 class Instructions(Node):
     def __init__(self):
@@ -84,20 +84,23 @@ class Instructions(Node):
 
 
 class PrintInstruction(Node):
-    def __init__(self, expressions):
+    def __init__(self, expressions, line):
         self.expressions = expressions
+        self.line = line
 
 
 class LabeledInstruction(Node):
-    def __init__(self, id, instruction):
+    def __init__(self, id, instruction, line):
         self.id = id
         self.instruction = instruction
+        self.line = line
 
 
 class AssignmentInstruction(Node):
-    def __init__(self, id, expression):
+    def __init__(self, id, expression, line):
         self.id = id
         self.expression = expression
+        self.line = line
 
 
 class ChoiceInstruction(Node):
@@ -120,8 +123,9 @@ class RepeatInstruction(Node):
 
 
 class ReturnInstruction(Node):
-    def __init__(self, expression):
+    def __init__(self, expression, line):
         self.expression = expression
+        self.line = line
 
 
 class ContinueInstruction(Node):
@@ -147,9 +151,12 @@ class GroupedExpression(Node):
         self.interior = interior
 
 class NamedExpression(Node):
-    def __init__(self, id, expressions):
+    # wywolanie funkcji
+    def __init__(self, id, expressions, line):
         self.id = id
         self.expressions = expressions
+        self.line = line
+
 
 class Fundefs(Node):
     def __init__(self):
@@ -159,6 +166,7 @@ class Fundefs(Node):
         self.fundefs.append(fundef)
 
 class Fundef(Node):
+    # type is return type
     def __init__(self, type, id, args, compound_instr):
         self.id = id
         self.type = type
@@ -173,8 +181,9 @@ class Arguments(Node):
         self.args.append(arg)
 
 class Argument(Node):
-    def __init__(self, type, id):
+    def __init__(self, type, id, line):
         self.type = type
         self.id = id
+        self.line = line
 
 

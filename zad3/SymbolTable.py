@@ -2,10 +2,15 @@
 
 
 class Symbol:
-    pass
+    def __init__(self, name, type):
+        self.name = name
+        self.type = type
 
 
 class VariableSymbol(Symbol):
+    pass
+
+class Fundef(Symbol):
     def __init__(self, name, type):
         self.name = name
         self.type = type
@@ -22,15 +27,13 @@ class SymbolTable(object):
         self.entries[name] = symbol
 
     def get(self, name): # get variable symbol or fundef from <name> entry
-        try:
-            ret = self.entries[name]
-            return ret
-        except:
-            return None
+        return self.entries.get(name)
+
+    def getGlobal(self, name):
+        return self.entries.get(name) or (None if self.parent is None else self.parent.getGlobal(name))
 
     def getParentScope(self):
         return self.parent
-    #
 
     def pushScope(self, name):
         pass
