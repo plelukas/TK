@@ -1,41 +1,26 @@
 #!/usr/bin/python
 
-ttype = dict()
-ttype['+'] = dict()
-ttype['-'] = dict()
-ttype['*'] = dict()
-ttype['/'] = dict()
-ttype['%'] = dict()
-ttype['|'] = dict()
-ttype['&'] = dict()
-ttype['^'] = dict()
-ttype['~'] = dict()
-ttype['<<'] = dict()
-ttype['>>'] = dict()
+from collections import defaultdict
 
-ttype['+']['int'] = dict()
-ttype['-']['int'] = dict()
-ttype['*']['int'] = dict()
-ttype['/']['int'] = dict()
-ttype['%']['int'] = dict()
-ttype['|']['int'] = dict()
-ttype['&']['int'] = dict()
-ttype['^']['int'] = dict()
-ttype['~']['int'] = 'int'
-ttype['<<']['int'] = dict()
-ttype['>>']['int'] = dict()
+ttype = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: None)))
+for op in ['+', '-', '*', '/', '%', '<', '>', '<<', '>>', '|', '&', '^', '<=', '>=', '==', '!=']:
+    ttype[op]['int']['int'] = 'int'
 
-ttype['+']['int']['int'] = 'int'
-ttype['-']['int']['int'] = 'int'
-ttype['*']['int']['int'] = 'int'
-ttype['/']['int']['int'] = 'int'
-ttype['|']['int']['int'] = 'int'
-ttype['&']['int']['int'] = 'int'
-ttype['^']['int']['int'] = 'int'
-ttype['<<']['int']['int'] = 'int'
-ttype['>>']['int']['int'] = 'int'
+for op in ['+', '-', '*', '/']:
+    ttype[op]['int']['float'] = 'float'
+    ttype[op]['float']['int'] = 'float'
+    ttype[op]['float']['float'] = 'float'
 
-ttype['+']['int']['float'] = 'float'
+for op in ['<', '>', '<=', '>=', '==', '!=']:
+    ttype[op]['int']['float'] = 'int'
+    ttype[op]['float']['int'] = 'int'
+    ttype[op]['float']['float'] = 'int'
+
+ttype['+']['string']['string'] = 'string'
+ttype['*']['string']['int'] = 'string'
+
+for op in ['<', '>', '<=', '>=', '==', '!=']:
+    ttype[op]['string']['string'] = 'int'
 
 
 class NodeVisitor(object):
