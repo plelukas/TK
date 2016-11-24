@@ -1,29 +1,35 @@
 #!/usr/bin/python
 
 
-class VariableSymbol(Symbol):
+class Symbol:
+    pass
 
+
+class VariableSymbol(Symbol):
     def __init__(self, name, type):
-        pass
-    #
+        self.name = name
+        self.type = type
 
 
 class SymbolTable(object):
 
     def __init__(self, parent, name): # parent scope and symbol table name
-        pass
-    #
+        self.parent = parent
+        self.name = name
+        self.entries = {}
 
     def put(self, name, symbol): # put variable symbol or fundef under <name> entry
-        pass
-    #
+        self.entries[name] = symbol
 
     def get(self, name): # get variable symbol or fundef from <name> entry
-        pass
-    #
+        try:
+            ret = self.entries[name]
+            return ret
+        except:
+            return None
 
     def getParentScope(self):
-        pass
+        return self.parent
     #
 
     def pushScope(self, name):

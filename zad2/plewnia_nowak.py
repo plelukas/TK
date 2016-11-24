@@ -1,13 +1,20 @@
 
-import ply.lex as lex
+import sys
 import ply.yacc as yacc
-import ast
+from Cparser import Cparser
+from TreePrinter import TreePrinter
 
 
-tokens = ('TYPE', )
+if __name__ == '__main__':
 
+    try:
+        filename = sys.argv[1] if len(sys.argv) > 1 else "example.txt"
+        file = open(filename, "r")
+    except IOError:
+        print("Cannot open {0} file".format(filename))
+        sys.exit(0)
 
-tree = ast.parse("x+y*z")
-ast.dump(tree)
-Module(body=[Expr(value=BinOp(left=Name(id='x', ctx=Load()), op=Add(),
-                              right=BinOp(left=Name(id='y', ctx=Load()), op=Mult(), right=Name(id='z', ctx=Load()))))])
+    Cparser = Cparser()
+    parser = yacc.yacc(module=Cparser)
+    text = file.read()
+    ast = parser.parse(text, lexer=Cparser.scanner)
