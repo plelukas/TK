@@ -111,20 +111,25 @@ class TypeChecker(NodeVisitor):
             self.visit(init)
 
     def visit_Init(self, node):
-        id = node.id
+        id = None
         expr = node.expression
         line = node.line
 
-        type = self.visit(expr)
-        if self.presentType != type and not (self.presentType == 'float' and type == 'int'):
-            if self.presentType != 'int' or type != 'float':
-                print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}"
-                      .format(id, line, self.presentType, type))
+        try:
+            id = self.table.entries[node.id]
+            print("{} already defined".format(node.id))
+        except KeyError:
+            id = node.id
+            type = self.visit(expr)
+            if self.presentType != type and not (self.presentType == 'float' and type == 'int'):
+                if self.presentType != 'int' or type != 'float':
+                    print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}"
+                          .format(id, line, self.presentType, type))
+                else:
+                    print("WARNING: possible loss of precision at line " + str(line))
+                    self.table.put(id, VariableSymbol(id, type))
             else:
-                print("WARNING: possible loss of precision at line " + str(line))
                 self.table.put(id, VariableSymbol(id, type))
-        else:
-            self.table.put(id, VariableSymbol(id, type))
 
     def visit_Instructions(self, node):
         for instr in node.instructions:
@@ -263,8 +268,8 @@ class TypeChecker(NodeVisitor):
             self.visit(i)
 
     def visit_Argument(self, node):
-        if self.table.get(node.id) is not None:
+        try:
+            x = self.table.entries[node.id]
             print("ERROR at line {}: Argument {} already defined".format(node.line, node.id))
-        else:
+        except KeyError:
             self.table.put(node.id, VariableSymbol(node.id, node.type))
-
