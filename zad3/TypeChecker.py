@@ -4,7 +4,7 @@ import AST
 
 from collections import defaultdict
 
-from SymbolTable import SymbolTable, VariableSymbol
+from SymbolTable import SymbolTable, VariableSymbol, FunctionSymbol
 
 ttype = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: None)))
 for op in ['+', '-', '*', '/', '%', '<', '>', '<<', '>>', '|', '&', '^', '<=', '>=', '==', '!=']:
@@ -57,6 +57,7 @@ class TypeChecker(NodeVisitor):
     def __init__(self):
         self.table = SymbolTable(None, 'global')
         self.presentType = None
+        self.presentFunction = None
 
     def visit_BinExpr(self, node):
         # alternative usage,
@@ -115,8 +116,13 @@ class TypeChecker(NodeVisitor):
         line = node.line
 
         type = self.visit(expr)
-        if self.presentType != type:
-            print("ERROR: Type mismatch in {} at line {}.".format(id, line))
+        if self.presentType != type and not (self.presentType == 'float' and type == 'int'):
+            if self.presentType != 'int' or type != 'float':
+                print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}"
+                      .format(id, line, self.presentType, type))
+            else:
+                print("WARNING: possible loss of precision at line " + str(line))
+                self.table.put(id, VariableSymbol(id, type))
         else:
             self.table.put(id, VariableSymbol(id, type))
 
@@ -139,50 +145,126 @@ class TypeChecker(NodeVisitor):
         if symbol is None:
             print("ERROR: {} not defined at line {}.".format(id, line))
         else:
-            type = symbol.type
-            if type != self.visit(expr):
-                print("ERRORL Type mismatch in {} at line {}.".format(id, line))
+            symbol_type = symbol.type
+            expr_type = self.visit(expr)
+            if symbol_type != expr_type and not (symbol_type == 'float' and expr_type == 'int'):
+                if symbol_type == 'int' and expr_type == 'float':
+                    print("WARNING: possible loss of precision at line " + str(line))
+                else:
+                    print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}."
+                          .format(id, line, symbol_type, expr_type))
 
 
     def visit_ChoiceInstruction(self, node):
-        pass
+        condition = node.condition
+        instruction = node.instruction
+        instruction2 = node.instruction2
+
+        self.visit(condition)
+        self.visit(instruction)
+        if instruction2 is not None:
+            self.visit(instruction2)
+
 
     def visit_WhileInstruction(self, node):
-        pass
+        if self.presentFunction is None:
+            print("ERROR: While statement out of function")
+        else:
+            self.visit(node.condition)
+            self.visit(node.instruction)
 
     def visit_RepeatInstruction(self, node):
-        pass
+        for i in node.instructions:
+            self.visit(i)
+        self.visit(node.condition)
 
     def visit_ReturnInstruction(self, node):
-        pass
+        expression_type = self.visit(node.expression)
+        fun = self.presentFunction
+        if isinstance(fun, FunctionSymbol):
+            if expression_type != fun.type and not(fun.type == 'float' and expression_type == 'int'):
+                if fun.type == 'int' and expression_type == 'float':
+                    print("WARNING: possible loss of precision at line " + str(node.line))
+                else:
+                    print("ERROR at line {}: returned type {}, got {}."
+                          .format(node.line, fun.type, expression_type))
+        else:
+            print("Return statement outside function at line " + str(node.line))
 
     def visit_ContinueInstruction(self, node):
-        pass
+        if self.presentFunction is None:
+            print ("ERROR: Continue statement out of function")
 
     def visit_BreakInstruction(self, node):
-        pass
+        if self.presentFunction is None:
+            print ("ERROR: Continue statement out of function")
 
     def visit_CompoundInstuction(self, node):
-        pass
+        new_table = SymbolTable(self.table, "new_scope")
+        self.table = new_table
+        if node.declarations is not None:
+            self.visit(node.declarations)
+        if node.instructions is not None:
+            self.visit(node.instructions)
+        self.table = self.table.getParentScope()
 
     def visit_Expressions(self, node):
-        pass
+        for i in node.expressions:
+            self.visit(i)
 
     def visit_GroupedExpression(self, node):
-        pass
+        return self.visit(node.interior)
 
     def visit_NamedExpression(self, node):
-        pass
+        function = self.table.get(node.id)
+        if function is None:
+            print("ERROR: Function " + str(node.id) + " not defined, line " + str(node.line))
+            return None
+        else:
+            if len(node.expressions.expressions) != len(function.arguments):
+                print("Function {} needs {} arguments, but {} are provided"
+                      .format(function.id, len(function.arguments), len(node.expressions.expressions)))
+                return function.type
+            for i in range(0, len(node.expressions.expressions)):
+                current_type = self.visit(node.expressions.expressions[i])
+                arg_type = function.arguments[i].type
+                if current_type != arg_type and not (arg_type == 'float' and current_type == 'int'):
+                    if current_type == 'float' and arg_type == 'int':
+                        print("WARNING: possible loss of precision at line " + str(node.line))
+                    else:
+                        print("ERROR: Type mismatch at line {}. Expected {}, got {}."
+                            .format(node.line, arg_type, current_type))
+            return function.type
 
     def visit_Fundefs(self, node):
-        pass
+        for i in node.fundefs:
+            self.visit(i)
 
     def visit_Fundef(self, node):
-        pass
+        if self.table.getParentScope() is not None:
+            print("ERROR: Function defined in non-global scope at line " + str(node.line))
+        else:
+            if self.table.get(node.id) is not None:
+                print("ERROR at line {}: Function {} already defined".format(node.line, node.id))
+            else:
+                self.presentFunction = FunctionSymbol(node.id, node.type, SymbolTable(self.table, node.id))
+                function = self.presentFunction
+                self.table.put(node.id, self.presentFunction)
+                self.table = self.presentFunction.table
+                if node.args is not None:
+                    self.visit(node.args)
+                self.presentFunction.arguments = [i for i in function.table.entries.values()]
+                self.visit(node.compound_instr)
+                self.table = self.table.getParentScope()
+                self.presentFunction = None
 
     def visit_Arguments(self, node):
-        pass
+        for i in node.args:
+            self.visit(i)
 
     def visit_Argument(self, node):
-        pass
+        if self.table.get(node.id) is not None:
+            print("ERROR at line {}: Argument {} already defined".format(node.line, node.id))
+        else:
+            self.table.put(node.id, VariableSymbol(node.id, node.type))
 

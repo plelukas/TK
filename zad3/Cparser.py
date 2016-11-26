@@ -43,7 +43,7 @@ class Cparser(object):
             None if len(p[2].fundefs) == 0 else p[2],
             None if len(p[3].instructions) == 0 else p[3]
         )
-        print(p[0])
+        #print(p[0])
 
 
     def p_declarations(self, p):

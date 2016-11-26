@@ -10,10 +10,12 @@ class Symbol:
 class VariableSymbol(Symbol):
     pass
 
-class Fundef(Symbol):
-    def __init__(self, name, type):
+class FunctionSymbol(Symbol):
+    def __init__(self, name, type, table):
         self.name = name
         self.type = type
+        self.table = table
+        self.arguments = []
 
 
 class SymbolTable(object):
@@ -27,7 +29,13 @@ class SymbolTable(object):
         self.entries[name] = symbol
 
     def get(self, name): # get variable symbol or fundef from <name> entry
-        return self.entries.get(name)
+        ret = self.entries.get(name)
+        if ret is None:
+            if self.parent is None:
+                return None
+            else:
+                ret = self.parent.get(name)
+        return ret
 
     def getGlobal(self, name):
         return self.entries.get(name) or (None if self.parent is None else self.parent.getGlobal(name))
