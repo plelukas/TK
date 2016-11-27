@@ -1,0 +1,2 @@
+ERROR at line 6: returned type int, got string.
+ERROR at line 7: returned type int, got string.

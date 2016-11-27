@@ -1,0 +1,1 @@
+ERROR: Type mismatch in x at line 4. Expected int, got string
