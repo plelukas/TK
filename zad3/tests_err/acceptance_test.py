@@ -25,10 +25,12 @@ class AcceptanceTests(unittest.TestCase):
             file_actual = "{0}.actual".format(name)
             file_expected = "{0}.expected".format(name)
             res = filecmp.cmp(file_actual, file_expected)
-            self.assertTrue(res, "files {0} and {1} differ\n---ACTUAL---\n{2}\n---EXPECTED---\n{3}\n---".format(file_actual,
+
+            with open(file_actual) as file_act, open(file_expected) as file_exp:
+                self.assertTrue(res, "files {0} and {1} differ\n---ACTUAL---\n{2}\n---EXPECTED---\n{3}\n---".format(file_actual,
                                                                                                                 file_expected,
-                                                                                                                open(file_actual, 'r').read(),
-                                                                                                                open(file_expected, 'r').read()
+                                                                                                                file_act.read(),
+                                                                                                                file_exp.read()
                                                                                                                ))
 
         func_name = file2func_name(name)
