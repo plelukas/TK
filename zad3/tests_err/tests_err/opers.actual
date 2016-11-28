@@ -1,1 +1,3 @@
-ERROR: Type mismatch in x at line 4. Expected int, got string
+Error: Assignment of string to int: line 4
+Error: Illegal operation, string - string: line 6
+Error: Illegal operation, string / string: line 7

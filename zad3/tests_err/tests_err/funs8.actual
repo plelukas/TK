@@ -1,1 +1,2 @@
-ERROR at line 4: Argument a already defined
+Error: Variable 'a' already declared: line 4
+Error: Variable 'a' already declared: line 16

@@ -129,10 +129,12 @@ class ReturnInstruction(Node):
 
 
 class ContinueInstruction(Node):
-    pass
+    def __init__(self, line):
+        self.line = line
 
 class BreakInstruction(Node):
-    pass
+    def __init__(self, line):
+        self.line = line
 
 class CompoundInstuction(Node):
     def __init__(self, declarations, instructions):
@@ -167,11 +169,12 @@ class Fundefs(Node):
 
 class Fundef(Node):
     # type is return type
-    def __init__(self, type, id, args, compound_instr):
+    def __init__(self, type, id, args, compound_instr, line):
         self.id = id
         self.type = type
         self.args = args
         self.compound_instr = compound_instr
+        self.line = line
 
 class Arguments(Node):
     def __init__(self):

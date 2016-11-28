@@ -58,6 +58,8 @@ class TypeChecker(NodeVisitor):
         self.table = SymbolTable(None, 'global')
         self.presentType = None
         self.presentFunction = None
+        self.loop_flag = False
+        self.uniq_arg = 0
 
     def visit_BinExpr(self, node):
         # alternative usage,
@@ -67,8 +69,11 @@ class TypeChecker(NodeVisitor):
         op = node.op
         line = node.line
 
+        if type1 is None or type2 is None:
+            return None
+
         if ttype[op][type1][type2] is None:
-            print("ERROR: Undefined operation {} for {} and {} at line {}.".format(op, type1, type2, line))
+            print("Error: Illegal operation, {} {} {}: line {}".format(type1, op, type2, line))
         return ttype[op][type1][type2]
 
 
@@ -87,14 +92,19 @@ class TypeChecker(NodeVisitor):
 
         symbol = self.table.getGlobal(name)
         if symbol is None:
-            print("ERROR: {} not defined at line {}.".format(name, line))
+            print("Error: Usage of undeclared variable '{}': line {}".format(name, line))
+        elif isinstance(symbol, FunctionSymbol):
+            print("Error: Function identifier '{}' used as a variable: line {}".format(name, line))
         else:
             return symbol.type
 
     def visit_Program(self, node):
-        self.visit(node.declarations)
-        self.visit(node.fundefs)
-        self.visit(node.instructions)
+        if node.declarations is not None:
+            self.visit(node.declarations)
+        if node.fundefs is not None:
+            self.visit(node.fundefs)
+        if node.instructions is not None:
+            self.visit(node.instructions)
 
     def visit_Declarations(self, node):
         for decl in node.declarations:
@@ -117,17 +127,23 @@ class TypeChecker(NodeVisitor):
 
         try:
             id = self.table.entries[node.id]
-            print("{} already defined".format(node.id))
+            print("Error: Variable '{}' already declared: line {}".format(node.id, node.line))
         except KeyError:
+            symbol = self.table.getGlobal(node.id)
+            if isinstance(symbol, FunctionSymbol):
+                print("Error: Function identifier '{}' used as a variable: line {}".format(node.id, line))
+                return
+
             id = node.id
             type = self.visit(expr)
+
             if self.presentType != type and not (self.presentType == 'float' and type == 'int'):
-                if self.presentType != 'int' or type != 'float':
-                    print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}"
-                          .format(id, line, self.presentType, type))
-                else:
+                if self.presentType == 'int' and type == 'float':
                     print("WARNING: possible loss of precision at line " + str(line))
                     self.table.put(id, VariableSymbol(id, type))
+                elif type is not None:
+                    print("Error: Assignment of {} to {}: line {}"
+                          .format(type, self.presentType, line))
             else:
                 self.table.put(id, VariableSymbol(id, type))
 
@@ -146,18 +162,19 @@ class TypeChecker(NodeVisitor):
         expr = node.expression
         line = node.line
 
+        expr_type = self.visit(expr)
+
         symbol = self.table.getGlobal(id)
         if symbol is None:
-            print("ERROR: {} not defined at line {}.".format(id, line))
+            print("Error: Variable '{}' undefined in current scope: line {}".format(id, line))
         else:
             symbol_type = symbol.type
-            expr_type = self.visit(expr)
             if symbol_type != expr_type and not (symbol_type == 'float' and expr_type == 'int'):
                 if symbol_type == 'int' and expr_type == 'float':
                     print("WARNING: possible loss of precision at line " + str(line))
-                else:
-                    print("ERROR: Type mismatch in {} at line {}. Expected {}, got {}."
-                          .format(id, line, symbol_type, expr_type))
+                elif expr_type is not None:
+                    print("Error: Assignment of {} to {}: line {}"
+                          .format(expr_type, symbol_type, line))
 
 
     def visit_ChoiceInstruction(self, node):
@@ -172,15 +189,23 @@ class TypeChecker(NodeVisitor):
 
 
     def visit_WhileInstruction(self, node):
-        if self.presentFunction is None:
-            print("ERROR: While statement out of function")
+        self.visit(node.condition)
+        if not self.loop_flag:
+            self.loop_flag = True
+            self.visit(node.instruction)
+            self.loop_flag = False
         else:
-            self.visit(node.condition)
             self.visit(node.instruction)
 
     def visit_RepeatInstruction(self, node):
-        for i in node.instructions:
-            self.visit(i)
+        if not self.loop_flag:
+            self.loop_flag = True
+            for i in node.instructions:
+                self.visit(i)
+            self.loop_flag = False
+        else:
+            for i in node.instructions:
+                self.visit(i)
         self.visit(node.condition)
 
     def visit_ReturnInstruction(self, node):
@@ -190,28 +215,25 @@ class TypeChecker(NodeVisitor):
             if expression_type != fun.type and not(fun.type == 'float' and expression_type == 'int'):
                 if fun.type == 'int' and expression_type == 'float':
                     print("WARNING: possible loss of precision at line " + str(node.line))
-                else:
-                    print("ERROR at line {}: returned type {}, got {}."
-                          .format(node.line, fun.type, expression_type))
+                elif expression_type is not None:
+                    print("Error: Improper returned type, expected {}, got {}: line {}"
+                          .format(fun.type, expression_type, node.line))
         else:
-            print("Return statement outside function at line " + str(node.line))
+            print("Error: return instruction outside a function: line " + str(node.line))
 
     def visit_ContinueInstruction(self, node):
-        if self.presentFunction is None:
-            print ("ERROR: Continue statement out of function")
+        if not self.loop_flag:
+            print("Error: continue instruction outside a loop: line {}".format(node.line))
 
     def visit_BreakInstruction(self, node):
-        if self.presentFunction is None:
-            print ("ERROR: Continue statement out of function")
+        if not self.loop_flag:
+            print("Error: break instruction outside a loop: line {}".format(node.line))
 
     def visit_CompoundInstuction(self, node):
-        new_table = SymbolTable(self.table, "new_scope")
-        self.table = new_table
         if node.declarations is not None:
             self.visit(node.declarations)
         if node.instructions is not None:
             self.visit(node.instructions)
-        self.table = self.table.getParentScope()
 
     def visit_Expressions(self, node):
         for i in node.expressions:
@@ -223,12 +245,12 @@ class TypeChecker(NodeVisitor):
     def visit_NamedExpression(self, node):
         function = self.table.get(node.id)
         if function is None:
-            print("ERROR: Function " + str(node.id) + " not defined, line " + str(node.line))
+            print("Error: Call of undefined fun '{}': line {}".format(node.id, node.line))
             return None
         else:
             if len(node.expressions.expressions) != len(function.arguments):
-                print("Function {} needs {} arguments, but {} are provided"
-                      .format(function.id, len(function.arguments), len(node.expressions.expressions)))
+                print("Error: Improper number of args in {} call: line {}"
+                      .format(function.name, node.line))
                 return function.type
             for i in range(0, len(node.expressions.expressions)):
                 current_type = self.visit(node.expressions.expressions[i])
@@ -237,8 +259,8 @@ class TypeChecker(NodeVisitor):
                     if current_type == 'float' and arg_type == 'int':
                         print("WARNING: possible loss of precision at line " + str(node.line))
                     else:
-                        print("ERROR: Type mismatch at line {}. Expected {}, got {}."
-                            .format(node.line, arg_type, current_type))
+                        print("Error: Improper type of args in {} call: line {}"
+                            .format(node.id, node.line))
             return function.type
 
     def visit_Fundefs(self, node):
@@ -250,7 +272,7 @@ class TypeChecker(NodeVisitor):
             print("ERROR: Function defined in non-global scope at line " + str(node.line))
         else:
             if self.table.get(node.id) is not None:
-                print("ERROR at line {}: Function {} already defined".format(node.line, node.id))
+                print("Error: Redefinition of function '{}': line {}".format(node.id, node.line))
             else:
                 self.presentFunction = FunctionSymbol(node.id, node.type, SymbolTable(self.table, node.id))
                 function = self.presentFunction
@@ -258,7 +280,7 @@ class TypeChecker(NodeVisitor):
                 self.table = self.presentFunction.table
                 if node.args is not None:
                     self.visit(node.args)
-                self.presentFunction.arguments = [i for i in function.table.entries.values()]
+                self.presentFunction.arguments = function.table.entries.values()
                 self.visit(node.compound_instr)
                 self.table = self.table.getParentScope()
                 self.presentFunction = None
@@ -270,6 +292,8 @@ class TypeChecker(NodeVisitor):
     def visit_Argument(self, node):
         try:
             x = self.table.entries[node.id]
-            print("ERROR at line {}: Argument {} already defined".format(node.line, node.id))
+            print("Error: Variable '{}' already declared: line {}".format(node.id, node.line))
+            self.table.put(self.uniq_arg, VariableSymbol(self.uniq_arg, node.type))
+            self.uniq_arg += 1
         except KeyError:
             self.table.put(node.id, VariableSymbol(node.id, node.type))

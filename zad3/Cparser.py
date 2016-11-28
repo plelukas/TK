@@ -159,12 +159,12 @@ class Cparser(object):
     
     def p_continue_instr(self, p):
         """continue_instr : CONTINUE ';' """
-        p[0] = AST.ContinueInstruction()
+        p[0] = AST.ContinueInstruction(p.lineno(1))
 
     
     def p_break_instr(self, p):
         """break_instr : BREAK ';' """
-        p[0] = AST.BreakInstruction()
+        p[0] = AST.BreakInstruction(p.lineno(1))
     
     
     def p_compound_instr(self, p):
@@ -265,7 +265,7 @@ class Cparser(object):
           
     def p_fundef(self, p):
         """fundef : TYPE ID '(' args_list_or_empty ')' compound_instr """
-        p[0] = AST.Fundef(p[1], p[2], p[4], p[6])
+        p[0] = AST.Fundef(p[1], p[2], p[4], p[6], p.lineno(1))
     
     
     def p_args_list_or_empty(self, p):
