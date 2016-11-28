@@ -1,0 +1,474 @@
+Generating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 107, in visit_Program
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 155, in visit_PrintInstruction
+    self.visit(node.expressions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 240, in visit_Expressions
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 105, in visit_Program
+    self.visit(node.fundefs)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 268, in visit_Fundefs
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 285, in visit_Fundef
+    self.visit(node.compound_instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 186, in visit_ChoiceInstruction
+    self.visit(instruction)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 188, in visit_ChoiceInstruction
+    self.visit(instruction2)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 165, in visit_AssignmentInstruction
+    expr_type = self.visit(expr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 105, in visit_Program
+    self.visit(node.fundefs)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 268, in visit_Fundefs
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 285, in visit_Fundef
+    self.visit(node.compound_instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 186, in visit_ChoiceInstruction
+    self.visit(instruction)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 188, in visit_ChoiceInstruction
+    self.visit(instruction2)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 165, in visit_AssignmentInstruction
+    expr_type = self.visit(expr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 107, in visit_Program
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 155, in visit_PrintInstruction
+    self.visit(node.expressions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 240, in visit_Expressions
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 107, in visit_Program
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 155, in visit_PrintInstruction
+    self.visit(node.expressions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 240, in visit_Expressions
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+FGenerating LALR tables
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 107, in visit_Program
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 155, in visit_PrintInstruction
+    self.visit(node.expressions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 240, in visit_Expressions
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+Traceback (most recent call last):
+  File "../main.py", line 22, in <module>
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 105, in visit_Program
+    self.visit(node.fundefs)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 268, in visit_Fundefs
+    self.visit(i)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 285, in visit_Fundef
+    self.visit(node.compound_instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 186, in visit_ChoiceInstruction
+    self.visit(instruction)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 236, in visit_CompoundInstuction
+    self.visit(node.instructions)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 152, in visit_Instructions
+    self.visit(instr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 188, in visit_ChoiceInstruction
+    self.visit(instruction2)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 165, in visit_AssignmentInstruction
+    expr_type = self.visit(expr)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 34, in visit
+    return visitor(node)
+  File "/media/sda8/pawel/Dokumenty/AGH_rok/git/TK/zad3/TypeChecker.py", line 257, in visit_NamedExpression
+    arg_type = function.arguments[i].type
+TypeError: 'dict_values' object does not support indexing
+FGenerating LALR tables
+FGenerating LALR tables
+.Generating LALR tables
+.
+======================================================================
+FAIL: test_tests_err/control_transfer (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/control_transfer.actual and tests_err/control_transfer.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: continue instruction outside a loop: line 6
+ELOOOO: False
+Error: break instruction outside a loop: line 12
+Error: return instruction outside a function: line 17
+
+---EXPECTED---
+Error: continue instruction outside a loop: line 6
+Error: break instruction outside a loop: line 12
+Error: return instruction outside a function: line 17
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs1 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs1.actual and tests_err/funs1.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Improper number of args in gcd call: line 9
+
+---EXPECTED---
+Error: Improper number of args in gcd call: line 9
+Error: Improper number of args in gcd call: line 11
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs2 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs2.actual and tests_err/funs2.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Improper number of args in gcd call: line 9
+
+---EXPECTED---
+Error: Improper number of args in gcd call: line 9
+Error: Improper number of args in gcd call: line 11
+Error: Improper type of args in gcd call: line 21
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs3 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs3.actual and tests_err/funs3.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Improper returned type, expected int, got string: line 6
+Error: Improper returned type, expected int, got string: line 7
+Error: Improper number of args in fact call: line 8
+Error: Improper number of args in fact call: line 11
+
+---EXPECTED---
+Error: Improper returned type, expected int, got string: line 6
+Error: Improper returned type, expected int, got string: line 7
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs4 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs4.actual and tests_err/funs4.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Call of undefined fun 'nbonacci': line 5
+
+---EXPECTED---
+Error: Call of undefined fun 'nbonacci': line 5
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs5 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs5.actual and tests_err/funs5.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Call of undefined fun 'nbonacci': line 5
+Error: Redefinition of function 'trib': line 8
+
+---EXPECTED---
+Error: Call of undefined function 'nbonacci': line 5
+Error: Redefinition of function 'trib': line 8
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs6 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs6.actual and tests_err/funs6.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Function identifier 'pow' used as a variable: line 6
+Error: Function identifier 'pow' used as a variable: line 8
+Error: Variable 'res' undefined in current scope: line 8
+Error: Function identifier 'pow' used as a variable: line 11
+Error: Improper number of args in pow call: line 14
+
+---EXPECTED---
+Error: Function identifier 'pow' used as a variable: line 6
+Error: Function identifier 'pow' used as a variable: line 8
+Error: Variable 'res' undefined in current scope: line 8
+Error: Function identifier 'pow' used as a variable: line 11
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs7 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs7.actual and tests_err/funs7.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Improper number of args in gcd_iter call: line 14
+
+---EXPECTED---
+Error: Missing return statement in function 'gcd_iter' returning int: line 12
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs8 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs8.actual and tests_err/funs8.expected differ
+---ACTUAL---
+Error: Variable 'a' already declared: line 4
+ELOOOO: False
+ELOOOO: False
+Error: Variable 'a' already declared: line 16
+Error: Improper number of args in bad1 call: line 26
+
+---EXPECTED---
+Error: Variable 'a' already declared: line 4
+Error: Variable 'a' already declared: line 16
+
+---
+
+======================================================================
+FAIL: test_tests_err/funs9 (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/funs9.actual and tests_err/funs9.expected differ
+---ACTUAL---
+ELOOOO: False
+Error: Improper number of args in gcd call: line 9
+
+---EXPECTED---
+Error: Improper number of args in gcd call: line 9
+Error: Improper number of args in gcd call: line 11
+Error: Improper type of args in gcd call: line 21
+Error: Improper returned type, expected int, got string: line 26
+Error: Improper returned type, expected int, got float: line 27
+Error: Call of undefined fun 'nbonacci': line 32
+Error: Redefinition of function 'trib': line 35
+Error: Function identifier 'pow' used as a variable: line 49
+Error: Variable 'res' undefined in current scope: line 51
+Error: Function identifier 'pow' used as a variable: line 51
+Error: Function identifier 'pow' used as a variable: line 54
+Error: Missing return statement in function 'gcd_iter' returning int: line 65
+Error: Call of undefined function 'gcd2': line 68
+
+---
+
+======================================================================
+FAIL: test_tests_err/opers (__main__.AcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "acceptance_test.py", line 31, in test_func
+    open(file_expected, 'r').read()
+AssertionError: False is not true : files tests_err/opers.actual and tests_err/opers.expected differ
+---ACTUAL---
+Error: Assignment of string to int: line 4
+Error: Illegal operation, string - string: line 6
+Error: Illegal operation, string / string: line 7
+
+---EXPECTED---
+Error: Assignment of string to int: line 4
+Error: Illegal operation, string - string: line 6
+Error: Illegal operation, string / string: line 7
+
+---
+
+----------------------------------------------------------------------
+Ran 13 tests in 4.426s
+
+FAILED (failures=11)

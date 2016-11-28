@@ -212,14 +212,14 @@ class TypeChecker(NodeVisitor):
         expression_type = self.visit(node.expression)
         fun = self.presentFunction
         if isinstance(fun, FunctionSymbol):
-            if expression_type != fun.type and not(fun.type == 'float' and expression_type == 'int'):
-                if fun.type == 'int' and expression_type == 'float':
-                    print("WARNING: possible loss of precision at line " + str(node.line))
-                elif expression_type is not None:
+            if expression_type != fun.type:
+                if expression_type is not None:
                     print("Error: Improper returned type, expected {}, got {}: line {}"
                           .format(fun.type, expression_type, node.line))
         else:
             print("Error: return instruction outside a function: line " + str(node.line))
+        if self.presentFunction is not None:
+            self.presentFunction.return_flag = True
 
     def visit_ContinueInstruction(self, node):
         if not self.loop_flag:
@@ -247,18 +247,20 @@ class TypeChecker(NodeVisitor):
         if function is None:
             print("Error: Call of undefined fun '{}': line {}".format(node.id, node.line))
             return None
-        else:
+        elif node.expressions is not None:
             if len(node.expressions.expressions) != len(function.arguments):
                 print("Error: Improper number of args in {} call: line {}"
                       .format(function.name, node.line))
                 return function.type
+            type_error_flag = False
             for i in range(0, len(node.expressions.expressions)):
                 current_type = self.visit(node.expressions.expressions[i])
                 arg_type = function.arguments[i].type
                 if current_type != arg_type and not (arg_type == 'float' and current_type == 'int'):
                     if current_type == 'float' and arg_type == 'int':
                         print("WARNING: possible loss of precision at line " + str(node.line))
-                    else:
+                    elif not type_error_flag:
+                        type_error_flag = True
                         print("Error: Improper type of args in {} call: line {}"
                             .format(node.id, node.line))
             return function.type
@@ -280,8 +282,12 @@ class TypeChecker(NodeVisitor):
                 self.table = self.presentFunction.table
                 if node.args is not None:
                     self.visit(node.args)
-                self.presentFunction.arguments = function.table.entries.values()
+                self.presentFunction.arguments = [i for i in function.table.entries.values()]
                 self.visit(node.compound_instr)
+                if not self.presentFunction.return_flag:
+                    print("Error: Missing return statement in function '{}' returning {}: line {}"
+                          .format(node.id, node.type, node.line))
+                    self.presentFunction.return_flag = False
                 self.table = self.table.getParentScope()
                 self.presentFunction = None
 

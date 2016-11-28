@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import sys
 import filecmp
-import unittest
+import unittest2
 import os
 
-class AcceptanceTests(unittest.TestCase):
+class AcceptanceTests(unittest2.TestCase):
 
     @classmethod
     def add_test(cls, dirpath, filename):
@@ -44,8 +44,7 @@ class AcceptanceTests(unittest.TestCase):
                     cls.add_test(dirpath,filename)
 
 if __name__ == '__main__':
-
     test_dir = sys.argv[1] if len(sys.argv) > 1 else "tests_err"
     sys.argv = [sys.argv[0]]
     AcceptanceTests.add_tests(test_dir)
-    unittest.main()
+    unittest2.main()
