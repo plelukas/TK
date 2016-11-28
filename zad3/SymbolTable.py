@@ -16,6 +16,7 @@ class FunctionSymbol(Symbol):
         self.type = type
         self.table = table
         self.arguments = []
+        self.return_flag = False
 
 
 class SymbolTable(object):
