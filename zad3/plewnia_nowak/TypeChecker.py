@@ -230,25 +230,17 @@ class TypeChecker(NodeVisitor):
             print("Error: break instruction outside a loop: line {}".format(node.line))
 
     def visit_CompoundInstuction(self, node):
-        if self.presentFunction is not None:
-            self.table = SymbolTable(self.table, self.presentFunction.name)
-            # add arguments to current scope
-            for arg in self.presentFunction.arguments:
-                self.table.put(arg.name, arg)
-            self.presentFunction.table = self.table
-        else:
-            self.table = SymbolTable(self.table, "inner_scope")
-
         if node.declarations is not None:
             self.visit(node.declarations)
         if node.instructions is not None:
             self.visit(node.instructions)
 
-        self.table = self.table.getParentScope()
-
     def visit_Expressions(self, node):
         for i in node.expressions:
             self.visit(i)
+
+    def visit_GroupedExpression(self, node):
+        return self.visit(node.interior)
 
     def visit_NamedExpression(self, node):
         function = self.table.get(node.id)
@@ -284,15 +276,19 @@ class TypeChecker(NodeVisitor):
             if self.table.get(node.id) is not None:
                 print("Error: Redefinition of function '{}': line {}".format(node.id, node.line))
             else:
-                self.presentFunction = FunctionSymbol(node.id, node.type, None)
+                self.presentFunction = FunctionSymbol(node.id, node.type, SymbolTable(self.table, node.id))
+                function = self.presentFunction
                 self.table.put(node.id, self.presentFunction)
+                self.table = self.presentFunction.table
                 if node.args is not None:
                     self.visit(node.args)
+                self.presentFunction.arguments = [i for i in function.table.entries.values()]
                 self.visit(node.compound_instr)
                 if not self.presentFunction.return_flag:
                     print("Error: Missing return statement in function '{}' returning {}: line {}"
                           .format(node.id, node.type, node.line))
-                self.presentFunction.return_flag = False
+                    self.presentFunction.return_flag = False
+                self.table = self.table.getParentScope()
                 self.presentFunction = None
 
     def visit_Arguments(self, node):
@@ -300,16 +296,10 @@ class TypeChecker(NodeVisitor):
             self.visit(i)
 
     def visit_Argument(self, node):
-        # check if present
-        is_present = False
-        for arg in self.presentFunction.arguments:
-            if node.id == arg.name:
-                is_present = True
-
-        if is_present:
+        try:
+            x = self.table.entries[node.id]
             print("Error: Variable '{}' already declared: line {}".format(node.id, node.line))
-            # put uniq
-            self.presentFunction.arguments.append(VariableSymbol(self.uniq_arg, node.type))
+            self.table.put(self.uniq_arg, VariableSymbol(self.uniq_arg, node.type))
             self.uniq_arg += 1
-        else:
-            self.presentFunction.arguments.append(VariableSymbol(node.id, node.type))
+        except KeyError:
+            self.table.put(node.id, VariableSymbol(node.id, node.type))

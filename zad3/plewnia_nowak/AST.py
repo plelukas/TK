@@ -148,6 +148,10 @@ class Expressions(Node):
     def addExpression(self, expr):
         self.expressions.append(expr)
 
+class GroupedExpression(Node):
+    def __init__(self, interior):
+        self.interior = interior
+
 class NamedExpression(Node):
     # wywolanie funkcji
     def __init__(self, id, expressions, line):

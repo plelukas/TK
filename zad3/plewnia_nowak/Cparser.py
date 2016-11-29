@@ -221,7 +221,7 @@ class Cparser(object):
                 p[0] = AST.Variable(p[1], p.lineno(1))
         elif len(p) == 4:
             if p[1] == "(":
-                p[0] = p[2]
+                p[0] = AST.GroupedExpression(p[2])
             else:
                 p[0] = AST.BinExpr(p[2], p[1], p[3], p.lineno(2))
         else:

@@ -153,11 +153,6 @@ class TreePrinter:
                 ret += i.printTree(level+1)
         return ret
 
-    @addToClass(AST.GroupedExpression)
-    def printTree(self, level=0):
-        ret = self.interior.printTree(level)
-        return ret
-
     @addToClass(AST.NamedExpression)
     def printTree(self, level=0):
         ret = ""
