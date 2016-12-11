@@ -88,35 +88,43 @@ class Interpreter(object):
 
     @when(AST.Variable)
     def visit(self, node):
-        pass
+        return self.globalMemory.get(node.name)
 
     @when(AST.Program)
     def visit(self, node):
-        pass
+        if node.declarations is not None:
+            node.declarations.accept(self)
+        if node.fundefs is not None:
+            node.fundefs.accept(self)
+        if node.instructions is not None:
+            node.instructions(self)
 
     @when(AST.Declarations)
     def visit(self, node):
-        pass
+        for decl in node.declarations:
+            decl.accept(self)
 
     @when(AST.Declaration)
     def visit(self, node):
-        pass
+        node.inits.accept(self)
 
     @when(AST.Inits)
     def visit(self, node):
-        pass
+        for init in node.inits:
+            init.accept(self)
 
     @when(AST.Init)
     def visit(self, node):
-        pass
+        self.globalMemory.insert(node.id, node.expression.accept(self))
 
     @when(AST.Instructions)
     def visit(self, node):
-        pass
+        for instr in node.instructions:
+            instr.accept(self)
 
     @when(AST.PrintInstruction)
     def visit(self, node):
-        pass
+        print(node.expressions.accept(self))
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
@@ -124,31 +132,39 @@ class Interpreter(object):
 
     @when(AST.AssignmentInstruction)
     def visit(self, node):
-        pass
+        self.globalMemory.set(node.id, node.expression.accept(self))
 
     @when(AST.ChoiceInstruction)
     def visit(self, node):
-        pass
+        if node.condition.accept(self):
+            node.instruction.accept(self)
+        else:
+            if node.instruction2 is not None:
+                node.instruction2.accept(self)
 
     @when(AST.ReturnInstruction)
     def visit(self, node):
-        pass
+        raise ReturnValueException(node.expression.accept(self))
 
     @when(AST.ContinueInstruction)
     def visit(self, node):
-        pass
+        raise ContinueException()
 
     @when(AST.BreakInstruction)
     def visit(self, node):
-        pass
+        raise BreakException()
 
     @when(AST.CompoundInstuction)
     def visit(self, node):
-        pass
+        if node.declarations is not None:
+            node.declarations.accept(self)
+        if node.instructions is not None:
+            node.instructions.accept(self)
 
     @when(AST.Expressions)
     def visit(self, node):
-        pass
+        for expr in node.expressions:
+            expr.accept(self)
 
     @when(AST.NamedExpression)
     def visit(self, node):
