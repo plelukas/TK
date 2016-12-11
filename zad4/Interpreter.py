@@ -97,7 +97,7 @@ class Interpreter(object):
         if node.fundefs is not None:
             node.fundefs.accept(self)
         if node.instructions is not None:
-            node.instructions(self)
+            node.instructions.accept(self)
 
     @when(AST.Declarations)
     def visit(self, node):
@@ -124,7 +124,8 @@ class Interpreter(object):
 
     @when(AST.PrintInstruction)
     def visit(self, node):
-        print(node.expressions.accept(self))
+        for to_print in node.expressions.accept(self):
+            print(to_print)
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
@@ -163,12 +164,30 @@ class Interpreter(object):
 
     @when(AST.Expressions)
     def visit(self, node):
+        result = []
         for expr in node.expressions:
-            expr.accept(self)
+            result.append(expr.accept(self))
+        return result
+
 
     @when(AST.NamedExpression)
     def visit(self, node):
-        pass
+        function = self.globalMemory.get(node.id)
+        function_memory = Memory(node.id)
+
+        # prepare arguments
+        if node.expressions is not None:
+            for function_argument, passed_argument in zip(function.args.accept(self), node.expressions.accept(self)):
+                function_memory.put(function_argument, passed_argument)
+        self.globalMemory.push(function_memory)
+
+        # execute body
+        try:
+            function.compound_instr.accept(self)
+        except ReturnValueException as e:
+            return e.value
+        finally:
+            self.globalMemory.pop()
 
     @when(AST.Fundefs)
     def visit(self, node):
@@ -177,14 +196,16 @@ class Interpreter(object):
 
     @when(AST.Fundef)
     def visit(self, node):
-        pass
+        self.globalMemory.insert(node.id, node)
 
     @when(AST.Arguments)
     def visit(self, node):
+        result = []
         for arg in node.args:
-            arg.accept(self)
+            result.append(arg.accept(self))
+        return result
 
     @when(AST.Argument)
     def visit(self, node):
-        pass
+        return node.id
 

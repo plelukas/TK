@@ -200,12 +200,10 @@ class TypeChecker(NodeVisitor):
     def visit_RepeatInstruction(self, node):
         if not self.loop_flag:
             self.loop_flag = True
-            for i in node.instructions:
-                self.visit(i)
+            self.visit(node.instructions)
             self.loop_flag = False
         else:
-            for i in node.instructions:
-                self.visit(i)
+            self.visit(node.instructions)
         self.visit(node.condition)
 
     def visit_ReturnInstruction(self, node):
