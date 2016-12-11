@@ -8,14 +8,36 @@ import sys
 
 sys.setrecursionlimit(10000)
 
+operation_map = {
+    '+': (lambda l, r: l + r),
+    '-': (lambda l, r: l - r),
+    '*': (lambda l, r: l * r),
+    '/': (lambda l, r: l / r),
+    '%': (lambda l, r: l % r),
+    '<': (lambda l, r: l < r),
+    '>': (lambda l, r: l > r),
+    '<<': (lambda l, r: l << r),
+    '>>': (lambda l, r: l >> r),
+    '|': (lambda l, r: l | r),
+    '&': (lambda l, r: l & r),
+    '^': (lambda l, r: l ^ r),
+    '<=': (lambda l, r: l <= r),
+    '>=': (lambda l, r: l >= r),
+    '==': (lambda l, r: l == r),
+    '!=': (lambda l, r: l != r)
+}
+
+
 class Interpreter(object):
 
+    def __init__(self):
+        self.globalMemory = MemoryStack()
 
     @on('node')
     def visit(self, node):
         pass
 
-    @when(AST.BinOp)
+    @when(AST.BinExpr)
     def visit(self, node):
         r1 = node.left.accept(self)
         r2 = node.right.accept(self)
@@ -23,27 +45,128 @@ class Interpreter(object):
         # if(node.op=='+') return r1+r2
         # elsif(node.op=='-') ...
         # but do not use python eval
+        return operation_map[node.op](r1, r2)
 
-    @when(AST.RelOp)
-    def visit(self, node):
-        r1 = node.left.accept(self)
-        r2 = node.right.accept(self)
-        # ...
+    # @when(AST.Const)
+    # def visit(self, node):
+    #     return node.value
 
-    @when(AST.Assignment)
+    @when(AST.Integer)
     def visit(self, node):
-    #
-    #
+        return int(node.value)
 
-    @when(AST.Const)
+    @when(AST.Float)
     def visit(self, node):
-        return node.value
+        return float(node.value)
+
+    @when(AST.String)
+    def visit(self, node):
+        return str(node.value)
 
     # simplistic while loop interpretation
-    @when(AST.WhileInstr)
+    @when(AST.WhileInstruction)
     def visit(self, node):
-        r = None
-        while node.cond.accept(self):
-            r = node.body.accept(self)
-        return r
+        while node.condition.accept(self):
+            try:
+                node.instruction.accept(self)
+            except BreakException:
+                break
+            except ContinueException:
+                pass
+
+    @when(AST.RepeatInstruction)
+    def visit(self, node):
+        while True:
+            try:
+                node.instructions.accept(self)
+                if node.condition.accept(self):
+                    break
+            except BreakException:
+                break
+            except ContinueException:
+                pass
+
+    @when(AST.Variable)
+    def visit(self, node):
+        pass
+
+    @when(AST.Program)
+    def visit(self, node):
+        pass
+
+    @when(AST.Declarations)
+    def visit(self, node):
+        pass
+
+    @when(AST.Declaration)
+    def visit(self, node):
+        pass
+
+    @when(AST.Inits)
+    def visit(self, node):
+        pass
+
+    @when(AST.Init)
+    def visit(self, node):
+        pass
+
+    @when(AST.Instructions)
+    def visit(self, node):
+        pass
+
+    @when(AST.PrintInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.LabeledInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.AssignmentInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.ChoiceInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.ReturnInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.ContinueInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.BreakInstruction)
+    def visit(self, node):
+        pass
+
+    @when(AST.CompoundInstuction)
+    def visit(self, node):
+        pass
+
+    @when(AST.Expressions)
+    def visit(self, node):
+        pass
+
+    @when(AST.NamedExpression)
+    def visit(self, node):
+        pass
+
+    @when(AST.Fundefs)
+    def visit(self, node):
+        pass
+
+    @when(AST.Fundef)
+    def visit(self, node):
+        pass
+
+    @when(AST.Arguments)
+    def visit(self, node):
+        pass
+
+    @when(AST.Argument)
+    def visit(self, node):
+        pass
 
