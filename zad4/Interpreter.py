@@ -172,7 +172,8 @@ class Interpreter(object):
 
     @when(AST.Fundefs)
     def visit(self, node):
-        pass
+        for fun in node.fundefs:
+            fun.accept(self)
 
     @when(AST.Fundef)
     def visit(self, node):
@@ -180,7 +181,8 @@ class Interpreter(object):
 
     @when(AST.Arguments)
     def visit(self, node):
-        pass
+        for arg in node.args:
+            arg.accept(self)
 
     @when(AST.Argument)
     def visit(self, node):
