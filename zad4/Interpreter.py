@@ -161,10 +161,15 @@ class Interpreter(object):
 
     @when(AST.CompoundInstuction)
     def visit(self, node):
+        scope = Memory("inner_scope", parent=self.globalMemory.peek())
+        self.globalMemory.push_scope(scope)
+
         if node.declarations is not None:
             node.declarations.accept(self)
         if node.instructions is not None:
             node.instructions.accept(self)
+
+        self.globalMemory.pop_scope()
 
     @when(AST.Expressions)
     def visit(self, node):
