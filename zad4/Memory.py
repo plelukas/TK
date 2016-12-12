@@ -26,7 +26,10 @@ class MemoryStack:
         #     if self.stack[i].has_key(name):
         #         return self.stack[i].get(name)
         # return None
-        return self.stack[-1].get(name) or self.stack[0].get(name)
+        if self.stack[-1].has_key(name):
+            return self.stack[-1].get(name)
+        else:
+            return self.stack[0].get(name)
 
     def insert(self, name, value): # inserts into memory stack variable <name> with value <value>
         self.stack[-1].put(name, value)

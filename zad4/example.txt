@@ -1,22 +1,28 @@
 
-float a = 0, b = 0, c = 0;
+int a = 0, b = 0, c = 0;
 
-int gcd(int m, int n) {
-
-int res = 0;
-if (m!=n) {
-    if (m > n)
-        res = gcd(m-n, n);
-    else
-        res = gcd(n-m, m);
-}
-else
-    res = m;
-
-print res;
-return res;
+# factorial, recursive
+int fact(int n) {
+  if(n==0) return 1;
+  else if(n==1) return 1;
+  else return n*fact(n-1);
 }
 
-while(a >= b ) {
-    a = 1/2*(a+b/a);
+
+# factorial, iterative
+int fact2(int x) {
+    int c = 1, res = 1;
+
+    repeat
+        res = res * c;
+        c = c + 1;
+    until c > x;
+    return res;
 }
+
+print fact(0);
+print fact(1);
+print fact(10);
+print fact2(10);
+print fact(20);
+print fact2(20);
