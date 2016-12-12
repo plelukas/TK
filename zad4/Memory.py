@@ -17,7 +17,7 @@ class Memory:
 
 class MemoryStack:
 
-    def __init__(self, memory=Memory('root')): # initialize memory stack with memory <memory>
+    def __init__(self, memory=Memory('root')):  # initialize memory stack with memory <memory>
         self.stack = []
         self.stack.append(memory)
 

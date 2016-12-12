@@ -84,7 +84,8 @@ class Interpreter(object):
             except BreakException:
                 break
             except ContinueException:
-                pass
+                if node.condition.accept(self):
+                    break
 
     @when(AST.Variable)
     def visit(self, node):
@@ -125,7 +126,10 @@ class Interpreter(object):
     @when(AST.PrintInstruction)
     def visit(self, node):
         for to_print in node.expressions.accept(self):
-            print(to_print)
+            if isinstance(to_print, float) and to_print.is_integer():
+                    print(int(to_print))
+            else:
+                print(to_print)
 
     @when(AST.LabeledInstruction)
     def visit(self, node):
@@ -168,7 +172,6 @@ class Interpreter(object):
         for expr in node.expressions:
             result.append(expr.accept(self))
         return result
-
 
     @when(AST.NamedExpression)
     def visit(self, node):
