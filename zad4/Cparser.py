@@ -182,11 +182,11 @@ class Cparser(object):
                  | FLOAT
                  | STRING"""
         if re.match(r"\d+(\.\d*)|\.\d+", p[1]):
-            p[0] = AST.Float(p.lineno(1), p[1])
+            p[0] = AST.Float(p[1], p.lineno(1))
         elif re.match(r"\d+", p[1]):
-            p[0] = AST.Integer(p.lineno(1), p[1])
+            p[0] = AST.Integer(p[1], p.lineno(1))
         else:
-            p[0] = AST.String(p.lineno(1), p[1])
+            p[0] = AST.String(p[1], p.lineno(1))
     
     
     def p_expression(self, p):
