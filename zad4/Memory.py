@@ -48,5 +48,5 @@ class MemoryStack:
         self.stack.append(memory)
 
     def pop(self):          # pops the top memory from the stack
-        return self.stack[-1]
+        return self.stack.pop()
 
