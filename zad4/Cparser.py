@@ -186,7 +186,7 @@ class Cparser(object):
         elif re.match(r"\d+", p[1]):
             p[0] = AST.Integer(p[1], p.lineno(1))
         else:
-            p[0] = AST.String(p[1], p.lineno(1))
+            p[0] = AST.String(p[1][1:-1], p.lineno(1))
     
     
     def p_expression(self, p):
