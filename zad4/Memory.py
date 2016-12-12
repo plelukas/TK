@@ -13,7 +13,7 @@ class Memory:
         if self.parent is None:
             return self.has_key(name)
         else:
-            return self.parent.has_stack_key(name)
+            return self.has_key(name) or self.parent.has_stack_key(name)
 
     def put(self, name, value):  # puts into memory current value of variable <name>
         self.dict[name] = value
@@ -53,10 +53,10 @@ class MemoryStack:
         else:
             return self.stack[0].get(name)
 
-    def insert(self, name, value): # inserts into memory stack variable <name> with value <value>
+    def insert(self, name, value):  # inserts into memory stack variable <name> with value <value>
         self.stack[-1].put(name, value)
 
-    def set(self, name, value): # sets variable <name> to value <value>
+    def set(self, name, value):  # sets variable <name> to value <value>
         # for i in range(len(self.stack) - 1, -1, -1): # reversed loop
         #     if self.stack[i].has_key(name):
         #         self.stack[i].put(name, value)
